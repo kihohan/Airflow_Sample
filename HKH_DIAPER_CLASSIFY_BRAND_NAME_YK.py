@@ -3,7 +3,7 @@ warnings.filterwarnings('ignore')
 
 import numpy as np
 import pandas as pd
-from hkh.src.HKH_DIAPER_YK import * # ±âÀú±Í ºê·£µå ºĞ·ùÇÏ´Â ÆĞÅ°Áö
+from hkh.src.HKH_DIAPER_YK import * # ê¸°ì €ê·€ ë¸Œëœë“œ ë¶„ë¥˜í•˜ëŠ” íŒ¨í‚¤ì§€
 
 import pymongo
 import sys
@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 def get_item():
 
-    client = pymongo.MongoClient("mongodb://133.186.168.8:50000")
+    client = pymongo.MongoClient("mongodb://~~~~~~~~~~~~~")
     db = client.DB_TEST
     
     item_d = pd.DataFrame(list(db.colt_item_option.find()))
@@ -22,8 +22,8 @@ def get_item():
     return df
 
 def seperate_in_else_data(df):
-    in_data = df[~((df['brand_name'].str.contains('»ó¼¼')) | (df['brand_name'] == '') | (df['brand_name'].str.contains('¾øÀ½')| df['brand_name'].str.contains('º°µµ')))]
-    else_data =  df[(df['brand_name'].str.contains('»ó¼¼')) | (df['brand_name'] == '') | (df['brand_name'].str.contains('¾øÀ½') | df['brand_name'].str.contains('º°µµ'))]
+    in_data = df[~((df['brand_name'].str.contains('ìƒì„¸')) | (df['brand_name'] == '') | (df['brand_name'].str.contains('ì—†ìŒ')| df['brand_name'].str.contains('ë³„ë„')))]
+    else_data =  df[(df['brand_name'].str.contains('ìƒì„¸')) | (df['brand_name'] == '') | (df['brand_name'].str.contains('ì—†ìŒ') | df['brand_name'].str.contains('ë³„ë„'))]
     return in_data, else_data
 
 def large_brand_name(in_data, else_data):
@@ -36,22 +36,22 @@ def merge_data(in_data,else_data):
     return diaper
 
 def classify_brand(diaper):
-    df_haggies = diaper[diaper['large_brand_name'] == 'ÇÏ±â½º']
-    df_goon = diaper[diaper['large_brand_name'] == '±º']
-    df_merries = diaper[diaper['large_brand_name'] == '¸Ş¸®Áî']
-    df_pampers = diaper[diaper['large_brand_name'] == 'ÆèÆÛ½º']
-    df_mammypoko = diaper[diaper['large_brand_name'] == '¸¶¹ÌÆ÷ÄÚ']
-    df_bosomi = diaper[diaper['large_brand_name'] == 'º¸¼ØÀÌ']
-    df_naturel = diaper[diaper['large_brand_name'] == '³×ÀÌÃ³·¯ºê¸Ş·¹']
-    df_superdady = diaper[diaper['large_brand_name'] == '½´ÆÛ´ëµğ']
-    df_penelope = diaper[diaper['large_brand_name'] == 'Æä³Ú·ÎÆä']
-    df_kindoh = diaper[diaper['large_brand_name'] == 'Å²µµ']
-    df_nabijam = diaper[diaper['large_brand_name'] == '³ªºñÀá']
+    df_haggies = diaper[diaper['large_brand_name'] == 'í•˜ê¸°ìŠ¤']
+    df_goon = diaper[diaper['large_brand_name'] == 'êµ°']
+    df_merries = diaper[diaper['large_brand_name'] == 'ë©”ë¦¬ì¦ˆ']
+    df_pampers = diaper[diaper['large_brand_name'] == 'í¨í¼ìŠ¤']
+    df_mammypoko = diaper[diaper['large_brand_name'] == 'ë§ˆë¯¸í¬ì½”']
+    df_bosomi = diaper[diaper['large_brand_name'] == 'ë³´ì†œì´']
+    df_naturel = diaper[diaper['large_brand_name'] == 'ë„¤ì´ì²˜ëŸ¬ë¸Œë©”ë ˆ']
+    df_superdady = diaper[diaper['large_brand_name'] == 'ìŠˆí¼ëŒ€ë””']
+    df_penelope = diaper[diaper['large_brand_name'] == 'í˜ë„¬ë¡œí˜']
+    df_kindoh = diaper[diaper['large_brand_name'] == 'í‚¨ë„']
+    df_nabijam = diaper[diaper['large_brand_name'] == 'ë‚˜ë¹„ì ']
     return df_haggies,df_goon,df_merries, df_pampers, df_mammypoko, df_bosomi, df_naturel,df_superdady,df_penelope,df_kindoh,df_nabijam
 
 def medium_brand_name(df_haggies,df_goon,df_merries, df_pampers, df_mammypoko, df_bosomi, df_naturel,df_superdady,df_penelope,df_kindoh,df_nabijam):
     df_haggies['medium_brand_name'] = df_haggies['goods_name'].apply(haggies_j)
-    # ¸Ş¸®Áî´Â medium_brand_name °Ç³Ê ¶Ü (ºĞ·ù°¡ ¾øÀ½)
+    # ë©”ë¦¬ì¦ˆëŠ” medium_brand_name ê±´ë„ˆ ëœ€ (ë¶„ë¥˜ê°€ ì—†ìŒ)
     df_goon['medium_brand_name'] = df_goon['goods_name'].apply(goon_j)
     df_pampers['medium_brand_name'] = df_pampers['goods_name'].apply(pampers_j)
     df_mammypoko['medium_brand_name'] = df_mammypoko['goods_name'].apply(mammypoko_j)
@@ -68,37 +68,37 @@ def merge_brand(df_haggies,df_goon,df_merries, df_pampers, df_mammypoko, df_boso
     return df_diaper
 
 def insert_item_option(df_diaper):
-    client = pymongo.MongoClient('mongodb://133.186.168.8:50000', maxPoolSize = None)
+    client = pymongo.MongoClient('mongodb://~~~~~~~~~~~~~~~~~', maxPoolSize = None)
     db_test = client.DB_TEST
     db = db_test.colt_item_option
-    df_diaper = df_diaper.rename(columns=lambda x: x.lower()) # ¼Ò¹®ÀÚ·Î º¯°æ
+    df_diaper = df_diaper.rename(columns=lambda x: x.lower()) # ì†Œë¬¸ìë¡œ ë³€ê²½
     for diaper_doc_id, diaper_large_brand_name, diaper_medium_brand_name in df_diaper[['doc_id','large_brand_name','medium_brand_name']].values[:]:
         db_test.colt_item_option.update_many({'doc_id': diaper_doc_id},{'$set':{'large_brand_name':diaper_large_brand_name,'medium_brand_name':diaper_medium_brand_name}})
 
 def main():
     item = get_item()
-    print ('µ¥ÀÌÅÍ ºÒ·¯¿À±â ¿Ï·á')
+    print ('ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸° ì™„ë£Œ')
     print ('----------------------')
     in_data, else_data = seperate_in_else_data(item)
-    print ('in_data, else_data ºĞ¸®¿Ï·á')
+    print ('in_data, else_data ë¶„ë¦¬ì™„ë£Œ')
     print ('----------------------')
     in_data, else_data = large_brand_name(in_data, else_data)
-    print ('large_brand_name ºĞ·ù ¿Ï·á')
+    print ('large_brand_name ë¶„ë¥˜ ì™„ë£Œ')
     print ('----------------------')
     diaper = merge_data(in_data,else_data)
 
     df_haggies, df_goon, df_merries, df_pampers, df_mammypoko, df_bosomi, df_naturel,df_superdady, df_penelope, df_kindoh, df_nabijam = classify_brand(diaper)
-    print ('±âÀú±â ºê·£µå ºĞ·ù ¿Ï·á')
+    print ('ê¸°ì €ê¸° ë¸Œëœë“œ ë¶„ë¥˜ ì™„ë£Œ')
     print ('----------------------')
     df_haggies, df_goon, df_merries, df_pampers, df_mammypoko, df_bosomi, df_naturel,df_superdady, df_penelope, df_kindoh, df_nabijam = \
     medium_brand_name(df_haggies, df_goon, df_merries, df_pampers, df_mammypoko, df_bosomi, df_naturel,df_superdady, df_penelope, df_kindoh, df_nabijam)
-    print ('medium_brand_name ºĞ·ù ¿Ï·á')
+    print ('medium_brand_name ë¶„ë¥˜ ì™„ë£Œ')
     print ('----------------------')
     df_diaper = merge_brand(df_haggies, df_goon, df_merries, df_pampers, df_mammypoko, df_bosomi, df_naturel,df_superdady, df_penelope, df_kindoh, df_nabijam)
-    print ('Á¤Á¦ ¿Ï·á')
+    print ('ì •ì œ ì™„ë£Œ')
     print ('----------------------')
     insert_item_option(df_diaper)
-    print ('µ¥ÀÌÅÍ »ğÀÔ ¿Ï·á')
+    print ('ë°ì´í„° ì‚½ì… ì™„ë£Œ')
     print ('----------END-----------')
 def classify_diaper_brand_name():
     s = datetime.now()

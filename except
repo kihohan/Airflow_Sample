@@ -1,8 +1,0 @@
-def except_processing(not_get_option_name):
-    diaper_brand_list = ['펨퍼스', '마미포코', '슈퍼대디', '하기스', '군', '킨도', '보솜이', '나비잠', '네이처러브메레']
-    not_get_option_name['count'] = not_get_option_name['check'].apply(lambda C:[(x in C) for x in diaper_brand_list].count(True))
-    error = not_get_option_name[not_get_option_name['count'] > 1]
-    not_error = not_get_option_name[~(not_get_option_name['count'] > 1)]
-    error['large_brand_name'], error['medium_brand_name'] = None, None
-    not_get_option_name = pd.concat([error,not_error])
-    return not_get_option_name
